@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignments</title>
+  <style>
+    body { font-family: sans-serif; background: #f0f4ff; padding: 30px; }
+    .assignment { border-bottom: 1px solid #ccc; margin-bottom: 20px; padding-bottom: 10px; }
+    iframe, img { max-width: 100%; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>📝 Assignments</h2>
+  <div id="assignmentsList"></div>
+
+  <script>
+    const assignments = JSON.parse(localStorage.getItem('teacherAssignments')) || [];
+    const listDiv = document.getElementById('assignmentsList');
+
+    if (assignments.length === 0) {
+      listDiv.innerHTML = "<p>No assignments uploaded yet.</p>";
+    } else {
+      assignments.forEach(a => {
+        const isPdf = a.file.startsWith("data:application/pdf");
+        listDiv.innerHTML += `
+          <div class="assignment">
+            <h3>${a.title}</h3>
+            <p>${a.desc}</p>
+            ${isPdf ? `<iframe src="${a.file}" width="100%" height="400px"></iframe>` : `<img src="${a.file}" alt="assignment image">`}
+          </div>
+        `;
+      });
+    }
+  </script>
+</body>
+</html>

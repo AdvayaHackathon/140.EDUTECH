@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Poll</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 20px;
+      background: #f8f9fa;
+    }
+    h2 { color: #333; }
+    .poll-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin: 10px 0;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .results {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="poll-box">
+    <h2>📊 Active Poll</h2>
+    <div id="pollContainer"></div>
+  </div>
+
+  <script>
+    function renderPoll() {
+      const poll = JSON.parse(localStorage.getItem('activePoll'));
+      const votes = JSON.parse(localStorage.getItem('pollVotes')) || {};
+      const voted = localStorage.getItem('voted');
+
+      const pollContainer = document.getElementById('pollContainer');
+      if (!poll) {
+        pollContainer.innerHTML = "<p>No active poll available.</p>";
+        return;
+      }
+
+      let html = `<h3>${poll.question}</h3>`;
+
+      if (voted) {
+        html += "<div class='results'><strong>Poll Results:</strong><br>";
+        poll.options.forEach(opt => {
+          const count = votes[opt] || 0;
+          html += `<p>${opt}: ${count} votes</p>`;
+        });
+        html += "</div>";
+      } else {
+        html += `<form id="pollForm">`;
+        poll.options.forEach((opt, index) => {
+          html += `<label><input type="radio" name="option" value="${opt}"> ${opt}</label>`;
+        });
+        html += `</form><button onclick="submitVote()">Vote</button>`;
+      }
+
+      pollContainer.innerHTML = html;
+    }
+
+    function submitVote() {
+      const selected = document.querySelector('input[name="option"]:checked');
+      if (!selected) {
+        alert("Please select an option.");
+        return;
+      }
+
+      const choice = selected.value;
+      const votes = JSON.parse(localStorage.getItem('pollVotes')) || {};
+      votes[choice] = (votes[choice] || 0) + 1;
+      localStorage.setItem('pollVotes', JSON.stringify(votes));
+      localStorage.setItem('voted', true);
+
+      renderPoll();
+    }
+
+    window.onload = renderPoll;
+  </script>
+</body>
+</html>

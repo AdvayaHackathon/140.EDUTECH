@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Class Schedule</title>
+  <style>
+    body { font-family: sans-serif; background: #f8fff0; padding: 30px; }
+    ul { list-style: none; padding-left: 0; }
+    li { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h2>📅 Scheduled Classes</h2>
+  <ul id="classList"></ul>
+
+  <script>
+    const classes = JSON.parse(localStorage.getItem('scheduledClasses')) || [];
+    const list = document.getElementById('classList');
+
+    if (classes.length === 0) {
+      list.innerHTML = "<li>No scheduled classes.</li>";
+    } else {
+      classes.forEach(cls => {
+        list.innerHTML += `<li><strong>${cls.topic}</strong> - ${new Date(cls.datetime).toLocaleString()}</li>`;
+      });
+    }
+  </script>
+</body>
+</html>

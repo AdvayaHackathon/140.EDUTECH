@@ -3,22 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <title>Teacher Dashboard</title>
-  <link rel="stylesheet" href="dashboard-style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 20px;
+      background: #f0f4f8;
+    }
+    h2 {
+      color: #333;
+    }
+    section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button, a.button-link {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover, a.button-link:hover {
+      background: #0056b3;
+    }
+  </style>
 </head>
 <body>
-  <div class="dashboard-container">
-    <h1>👩‍🏫 Teacher Dashboard</h1>
 
-    <div class="card" onclick="showSection('host')">📡 Host Class</div>
-    <div class="card" onclick="showSection('poll')">🗳️ Create Poll</div>
-    <div class="card" onclick="showSection('schedule')">📅 Schedule Class</div>
-    <div class="card" onclick="showSection('assignments')">📚 Manage Assignments</div>
-    <div class="card" onclick="showSection('results')">📊 View Poll Results</div>
-    <div class="card" onclick="showSection('library')">📖 Question Library</div>
+  <h2>👨‍🏫 Teacher Dashboard</h2>
 
-    <div id="section-content" class="section-box"></div>
-  </div>
+  <!-- Create Poll -->
+  <section>
+    <h3>Create Poll</h3>
+    <a href="teacher-poll.html" class="button-link">Go to Poll Creation</a>
+  </section>
 
-  <script src="dashboard-script.js"></script>
+  <!-- Schedule Class -->
+  <section>
+    <h3>Schedule Class</h3>
+    <label>Topic:</label>
+    <input type="text" id="classTopic">
+    <label>Date & Time:</label>
+    <input type="datetime-local" id="classDateTime">
+    <button onclick="scheduleClass()">Schedule</button>
+  </section>
+
+  <!-- Assignments -->
+  <section>
+    <h3>Manage Assignments</h3>
+    <label>Title:</label>
+    <input type="text" id="assignTitle">
+    <label>Description:</label>
+    <textarea id="assignDesc"></textarea>
+    <label>Upload (PDF or JPG):</label>
+    <input type="file" id="assignFile" accept=".pdf,.jpg,.jpeg">
+    <button onclick="saveAssignment()">Save Assignment</button>
+  </section>
+
+  <!-- Question Library -->
+  <section>
+    <h3>Reusable Question Library</h3>
+    <label>Enter Question:</label>
+    <input type="text" id="libQuestion">
+    <button onclick="addQuestionToLibrary()">Add to Library</button>
+    <ul id="libraryList"></ul>
+  </section>
+
+  <script>
+    function scheduleClass() {
+      const topic = document.getElementById('classTopic').value;
+      const datetime = document.getElementById('classDateTime').value;
+      const classes = JSON.parse(localStorage.getItem('scheduledClasses')) || [];
+      classes.push({ topic, datetime });
+      localStorage.setItem('scheduledClasses', JSON.stringify(classes));
+      alert("Class scheduled!");
+    }
+
+    function saveAssignment() {
+      const title = document.getElementById('assignTitle').value;
+      const desc = document.getElementById('assignDesc').value;
+      const fileInput = document.getElementById('assignFile');
+      const file = fileInput.files[0];
+      if (!file) return alert("Please select a file.");
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64 = e.target.result;
+        const assignments = JSON.parse(localStorage.getItem('teacherAssignments')) || [];
+        assignments.push({ title, desc, file: base64 });
+        localStorage.setItem('teacherAssignments', JSON.stringify(assignments));
+        alert("Assignment saved!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function addQuestionToLibrary() {
+      const question = document.getElementById('libQuestion').value;
+      const library = JSON.parse(localStorage.getItem('questionLibrary')) || [];
+      library.push(question);
+      localStorage.setItem('questionLibrary', JSON.stringify(library));
+      loadLibrary();
+      alert("Question added!");
+    }
+
+    function loadLibrary() {
+      const list = document.getElementById('libraryList');
+      list.innerHTML = '';
+      const library = JSON.parse(localStorage.getItem('questionLibrary')) || [];
+      library.forEach(q => {
+        const li = document.createElement('li');
+        li.textContent = q;
+        list.appendChild(li);
+      });
+    }
+
+    window.onload = loadLibrary;
+  </script>
+
 </body>
 </html>

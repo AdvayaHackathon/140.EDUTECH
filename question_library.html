@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Question Library</title>
+  <style>
+    body { font-family: sans-serif; background: #fff0f0; padding: 30px; }
+  </style>
+</head>
+<body>
+  <h2>📚 Question Library</h2>
+  <ul id="questionList"></ul>
+
+  <script>
+    const library = JSON.parse(localStorage.getItem('questionLibrary')) || [];
+    const list = document.getElementById('questionList');
+
+    if (library.length === 0) {
+      list.innerHTML = "<li>No questions added.</li>";
+    } else {
+      library.forEach(q => {
+        const li = document.createElement('li');
+        li.textContent = q;
+        list.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>

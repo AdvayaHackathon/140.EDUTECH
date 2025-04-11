@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Teacher Poll Management</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 20px;
+      background: #f4f6f9;
+    }
+    h2 {
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .info {
+      margin-top: 20px;
+      padding: 10px;
+      background: #e9f7ef;
+      border-left: 4px solid #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>📋 Teacher Poll Management</h2>
+
+    <label for="question">Poll Question:</label>
+    <input type="text" id="question">
+
+    <label for="options">Options (comma-separated):</label>
+    <input type="text" id="options">
+
+    <button onclick="savePoll()">Save / Update Poll</button>
+    <button onclick="resetVotes()" style="background: #dc3545;">Reset Votes</button>
+
+    <div class="info" id="pollInfo"></div>
+  </div>
+
+  <script>
+    function savePoll() {
+      const question = document.getElementById('question').value.trim();
+      const options = document.getElementById('options').value.split(',').map(opt => opt.trim()).filter(Boolean);
+
+      if (!question || options.length < 2) {
+        alert("Please enter a question and at least two options.");
+        return;
+      }
+
+      const poll = { question, options };
+      localStorage.setItem('activePoll', JSON.stringify(poll));
+      localStorage.removeItem('pollVotes');
+      localStorage.removeItem('voted'); // Reset student voting
+      updatePollInfo();
+      alert("Poll saved successfully!");
+    }
+
+    function resetVotes() {
+      localStorage.removeItem('pollVotes');
+      localStorage.removeItem('voted');
+      alert("Votes have been reset.");
+    }
+
+    function updatePollInfo() {
+      const poll = JSON.parse(localStorage.getItem('activePoll'));
+      const info = document.getElementById('pollInfo');
+      if (poll) {
+        info.innerHTML = `<strong>Active Poll:</strong><br><em>${poll.question}</em><br><strong>Options:</strong> ${poll.options.join(', ')}`;
+      } else {
+        info.innerHTML = "<em>No active poll.</em>";
+      }
+    }
+
+    window.onload = updatePollInfo;
+  </script>
+
+</body>
+</html>
