@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student E-Notes</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 20px; background: #eef2f3; }
+    h2 { color: #333; }
+    section { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    a { display: block; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>📘 E-Notes</h2>
+  <div id="noteList"></div>
+
+  <script>
+    function loadENotes() {
+      const notes = JSON.parse(localStorage.getItem('eNotes')) || [];
+      const listDiv = document.getElementById('noteList');
+      if (notes.length === 0) {
+        listDiv.innerHTML = "<p>No notes available.</p>";
+        return;
+      }
+      listDiv.innerHTML = '';
+      notes.forEach((note, i) => {
+        const section = document.createElement('section');
+        section.innerHTML = `<strong>${note.title}</strong><br><a href="${note.file}" target="_blank">📥 View / Download</a>`;
+        listDiv.appendChild(section);
+      });
+    }
+
+    window.onload = loadENotes;
+  </script>
+</body>
+</html>
