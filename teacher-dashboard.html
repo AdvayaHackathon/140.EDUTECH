@@ -85,6 +85,17 @@
     <ul id="libraryList"></ul>
   </section>
 
+  <!-- E-Notes Upload -->
+<section>
+  <h3>📚 Upload E-Notes</h3>
+  <label>Title:</label>
+  <input type="text" id="noteTitle">
+  <label>Upload File (PDF or DOCX):</label>
+  <input type="file" id="noteFile" accept=".pdf,.doc,.docx">
+  <button onclick="uploadENote()">Upload Note</button>
+</section>
+
+
   <script>
     function scheduleClass() {
       const topic = document.getElementById('classTopic').value;
@@ -121,6 +132,24 @@
       loadLibrary();
       alert("Question added!");
     }
+    
+    function uploadENote() {
+  const title = document.getElementById('noteTitle').value;
+  const fileInput = document.getElementById('noteFile');
+  const file = fileInput.files[0];
+  if (!file) return alert("Please select a file.");
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const base64 = e.target.result;
+    const notes = JSON.parse(localStorage.getItem('eNotes')) || [];
+    notes.push({ title, file: base64 });
+    localStorage.setItem('eNotes', JSON.stringify(notes));
+    alert("Note uploaded successfully!");
+  };
+  reader.readAsDataURL(file);
+}
+
 
     function loadLibrary() {
       const list = document.getElementById('libraryList');

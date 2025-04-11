@@ -2,99 +2,94 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Student Poll</title>
+  <title>Polls</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      margin: 20px;
-      background: #f8f9fa;
+      background: #f4f9ff;
+      padding: 30px;
     }
-    h2 { color: #333; }
-    .poll-box {
+    h2 {
+      color: #333;
+    }
+    img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+    .poll-container {
       background: #fff;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      max-width: 500px;
-      margin: auto;
-    }
-    label {
-      display: block;
-      margin: 10px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 600px;
     }
     button {
-      margin-top: 20px;
+      margin-top: 15px;
       padding: 10px 20px;
       background: #007bff;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
     }
     button:hover {
       background: #0056b3;
     }
-    .results {
+    .result {
       margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-  <div class="poll-box">
-    <h2>📊 Active Poll</h2>
-    <div id="pollContainer"></div>
+  <img src="poll.png" alt="Poll Icon">
+  <h2>📊 Active Poll</h2>
+
+  <div class="poll-container" id="pollContent">
+    <!-- Poll content will be loaded here -->
   </div>
 
   <script>
-    function renderPoll() {
-      const poll = JSON.parse(localStorage.getItem('activePoll'));
-      const votes = JSON.parse(localStorage.getItem('pollVotes')) || {};
-      const voted = localStorage.getItem('voted');
-
-      const pollContainer = document.getElementById('pollContainer');
-      if (!poll) {
-        pollContainer.innerHTML = "<p>No active poll available.</p>";
-        return;
-      }
-
-      let html = `<h3>${poll.question}</h3>`;
-
-      if (voted) {
-        html += "<div class='results'><strong>Poll Results:</strong><br>";
-        poll.options.forEach(opt => {
-          const count = votes[opt] || 0;
-          html += `<p>${opt}: ${count} votes</p>`;
-        });
-        html += "</div>";
-      } else {
-        html += `<form id="pollForm">`;
-        poll.options.forEach((opt, index) => {
-          html += `<label><input type="radio" name="option" value="${opt}"> ${opt}</label>`;
-        });
-        html += `</form><button onclick="submitVote()">Vote</button>`;
-      }
-
-      pollContainer.innerHTML = html;
-    }
+    const poll = JSON.parse(localStorage.getItem('activePoll'));
+    const votes = JSON.parse(localStorage.getItem('pollVotes')) || {};
+    const pollDiv = document.getElementById('pollContent');
 
     function submitVote() {
-      const selected = document.querySelector('input[name="option"]:checked');
-      if (!selected) {
-        alert("Please select an option.");
-        return;
-      }
+      const selected = document.querySelector('input[name="pollOption"]:checked');
+      if (!selected) return alert("Please select an option!");
 
-      const choice = selected.value;
-      const votes = JSON.parse(localStorage.getItem('pollVotes')) || {};
-      votes[choice] = (votes[choice] || 0) + 1;
+      const value = selected.value;
+      votes[value] = (votes[value] || 0) + 1;
       localStorage.setItem('pollVotes', JSON.stringify(votes));
-      localStorage.setItem('voted', true);
+      alert("Vote submitted!");
 
-      renderPoll();
+      showResults();
     }
 
-    window.onload = renderPoll;
+    function showResults() {
+      let html = `<h3>Live Results: ${poll.question}</h3>`;
+      poll.options.forEach(opt => {
+        const count = votes[opt] || 0;
+        html += `<p>${opt}: ${count} votes</p>`;
+      });
+      pollDiv.innerHTML = html;
+    }
+
+    if (poll) {
+      let html = `<h3>${poll.question}</h3>`;
+      poll.options.forEach(option => {
+        html += `
+          <p>
+            <label>
+              <input type="radio" name="pollOption" value="${option}"> ${option}
+            </label>
+          </p>`;
+      });
+      html += `<button onclick="submitVote()">Submit</button>`;
+      pollDiv.innerHTML = html;
+    } else {
+      pollDiv.innerHTML = "<p>No active poll available.</p>";
+    }
   </script>
 </body>
 </html>
