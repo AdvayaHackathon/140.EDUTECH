@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login / Signup</title>
+  <link rel="stylesheet" href="auth-style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>🔐 Class Portal Access</h2>
+
+    <div class="toggle-buttons">
+      <button onclick="showForm('signup')">Create Account</button>
+      <button onclick="showForm('login')">Login</button>
+    </div>
+
+    <div id="signupForm">
+      <h3>Create Account</h3>
+      <label>Role:</label>
+      <select id="signupRole">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+      </select><br><br>
+
+      <input type="email" id="signupEmail" placeholder="Enter Email" required>
+      <input type="password" id="signupPassword" placeholder="Create Password" required>
+      <button onclick="createAccount()">Sign Up</button>
+      <p>Password must have 1 capital, 1 number, 1 symbol</p>
+    </div>
+
+    <div id="loginForm" style="display:none;">
+      <h3>Login</h3>
+      <input type="email" id="loginEmail" placeholder="Enter Email" required>
+      <input type="password" id="loginPassword" placeholder="Enter Password" required>
+      <button onclick="login()">Login</button>
+      <p><a href="#" onclick="resetPassword()">Forgot Password?</a></p>
+    </div>
+  </div>
+
+  <script src="auth-script.js"></script>
+</body>
+</html>
