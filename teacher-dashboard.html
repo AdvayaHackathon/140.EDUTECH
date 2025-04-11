@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="dashboard-style.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <h1>👩‍🏫 Teacher Dashboard</h1>
+
+    <div class="card" onclick="showSection('host')">📡 Host Class</div>
+    <div class="card" onclick="showSection('poll')">🗳️ Create Poll</div>
+    <div class="card" onclick="showSection('schedule')">📅 Schedule Class</div>
+    <div class="card" onclick="showSection('assignments')">📚 Manage Assignments</div>
+    <div class="card" onclick="showSection('results')">📊 View Poll Results</div>
+    <div class="card" onclick="showSection('library')">📖 Question Library</div>
+
+    <div id="section-content" class="section-box"></div>
+  </div>
+
+  <script src="dashboard-script.js"></script>
+</body>
+</html>
